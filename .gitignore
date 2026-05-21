@@ -1,4 +1,7 @@
 node_modules
+.env
 
-# artify-gallery
-# bvYMkYQECymM2G76
+# if (process.env.NODE_ENV !== "production") {
+  const dns = require("dns");
+  dns.setServers(["1.1.1.1", "8.8.8.8"]);
+}
