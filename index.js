@@ -105,8 +105,22 @@ async function run() {
 
       res.send({
         success: true,
-        result
+        result,
       });
+    });
+
+    //latest 6 data
+    //get
+    //find
+
+    app.get("/latest-data", async (req, res) => {
+      const result = await dataCollections
+        .find()
+        .sort({ date: "desc" }) //desc/1
+        .limit(6)
+        .toArray(); 
+      console.log(result);
+      res.send(result);
     });
 
     await client.db("admin").command({ ping: 1 });
