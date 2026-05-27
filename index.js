@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const admin = require("firebase-admin");
+const serviceAccount = require("./artifyKey.json");
 const dns = require("dns");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,6 +15,10 @@ app.use(express.json());
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6giibzh.mongodb.net/?appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -23,6 +29,13 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+
+const middleWare = (req, res, next) => {
+  const authorization = req.headers.authorization;
+  const token = authorization.split(" ")[1];
+  console.log(token);
+  next();
+};
 
 async function run() {
   try {
@@ -56,7 +69,7 @@ async function run() {
     });
 
     // show details
-    app.get("/samples/:id", async (req, res) => {
+    app.get("/samples/:id", middleWare, async (req, res) => {
       const { id } = req.params;
       console.log(id);
       const individualResult = await dataCollections.findOne({
@@ -118,7 +131,7 @@ async function run() {
         .find()
         .sort({ date: "desc" }) //desc/1
         .limit(6)
-        .toArray(); 
+        .toArray();
       console.log(result);
       res.send(result);
     });
