@@ -1,5 +1,6 @@
 node_modules
 .env
+artifyKey.json
 
 # if (process.env.NODE_ENV !== "production") {
   const dns = require("dns");
