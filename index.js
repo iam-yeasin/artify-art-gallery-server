@@ -29,11 +29,24 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
-
-const middleWare = (req, res, next) => {
+//token verify through fb sdk
+const verifyFBtoken = async (req, res, next) => {
   const authorization = req.headers.authorization;
+  if (!authorization) {
+    return res.status(401).send({
+      message: "Unauthorized Access, Token Not Found.",
+    });
+  }
   const token = authorization.split(" ")[1];
-  console.log(token);
+  // console.log(token);
+
+  try {
+    await admin.auth().verifyIdToken(token);
+  } catch (error) {
+    res.status(401).send({
+      message: "Unauthorized Access",
+    });
+  }
   next();
 };
 
@@ -69,7 +82,7 @@ async function run() {
     });
 
     // show details
-    app.get("/samples/:id", middleWare, async (req, res) => {
+    app.get("/samples/:id", verifyFBtoken, async (req, res) => {
       const { id } = req.params;
       console.log(id);
       const individualResult = await dataCollections.findOne({
@@ -133,6 +146,15 @@ async function run() {
         .limit(6)
         .toArray();
       console.log(result);
+      res.send(result);
+    });
+
+    //user can now see only their own gallery data
+    app.get("/my-artworks", async (req, res) => {
+      const email = req.query.email;
+      const result = await dataCollections
+        .find({ created_by: email })
+        .toArray();
       res.send(result);
     });
 
