@@ -58,6 +58,7 @@ async function run() {
 
     const db = client.db("artify-art-gallery");
     const dataCollections = db.collection("samples");
+    const favoriteCollections = db.collection("favorites");
 
     //find
     //findOne
@@ -71,7 +72,7 @@ async function run() {
     //insertOne
     //insertMany
 
-    app.post("/samples", async (req, res) => {
+    app.post("/samples", verifyFBtoken, async (req, res) => {
       const data = req.body;
       // console.log(data);
       const result = await dataCollections.insertOne(data);
@@ -98,7 +99,7 @@ async function run() {
     // updateOne
     // updateMany
 
-    app.put("/samples/:id", async (req, res) => {
+    app.put("/samples/:id", verifyFBtoken, async (req, res) => {
       const { id } = req.params;
       const data = req.body;
       // console.log(id);
@@ -121,7 +122,7 @@ async function run() {
     // deleteOne
     // deleteMany
 
-    app.delete("/samples/:id", async (req, res) => {
+    app.delete("/samples/:id", verifyFBtoken, async (req, res) => {
       const { id } = req.params;
       const objectId = new ObjectId(id);
       const filter = { _id: objectId };
@@ -150,12 +151,39 @@ async function run() {
     });
 
     //user can now see only their own gallery data
-    app.get("/my-artworks", async (req, res) => {
+    app.get("/my-artworks", verifyFBtoken, async (req, res) => {
       const email = req.query.email;
       const result = await dataCollections
         .find({ created_by: email })
         .toArray();
       res.send(result);
+    });
+
+    app.post("/favorites", verifyFBtoken, async (req, res) => {
+      const data = req.body;
+      const result = await favoriteCollections.insertOne(data);
+      res.send(result);
+    });
+    app.get("/my-favorites", verifyFBtoken, async (req, res) => {
+      const email = req.query.email;
+      const result = await favoriteCollections
+        .find({ addToFavorites: email })
+        .toArray();
+      res.send(result);
+    });
+
+    app.patch("/samples/:id/like", verifyFBtoken, async (req, res) => {
+      const { id } = req.params;
+      const filter = { _id: new ObjectId(id) };
+      const updateCount = {
+        $inc: { likes: 1 },
+      };
+      const likesCount = await dataCollections.updateOne(filter, updateCount);
+
+      res.send({
+        success: true,
+        likesCount,
+      });
     });
 
     await client.db("admin").command({ ping: 1 });
