@@ -85,7 +85,7 @@ async function run() {
     // show details
     app.get("/samples/:id", verifyFBtoken, async (req, res) => {
       const { id } = req.params;
-      console.log(id);
+      // console.log(id);
       const individualResult = await dataCollections.findOne({
         _id: new ObjectId(id),
       });
@@ -146,7 +146,7 @@ async function run() {
         .sort({ date: "desc" }) //desc/1
         .limit(6)
         .toArray();
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
 
@@ -186,10 +186,31 @@ async function run() {
       });
     });
 
+    //search api
+    app.get("/search", verifyFBtoken, async (req, res) => {
+      const search_text = req.query.search;
+      const result = await dataCollections
+        .find({ title: { $regex: search_text, $options: "i" } })
+        .toArray();
+
+      res.send(result);
+    });
+
+    //filter by category
+    app.get("/category", verifyFBtoken, async (req, res) => {
+      const filter_cat = req.query.category;
+
+      const result = await dataCollections
+        .find({ category: filter_cat })
+        .toArray();
+
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!",
-    );
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!",
+    // );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
@@ -201,6 +222,6 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server is listening on port ${port}`);
+// });
