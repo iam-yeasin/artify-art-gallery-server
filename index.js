@@ -13,7 +13,7 @@ app.use(cors());
 
 app.use(express.json());
 
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+// dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -53,7 +53,7 @@ const verifyFBtoken = async (req, res, next) => {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
 
     const db = client.db("artify-art-gallery");
@@ -65,7 +65,10 @@ async function run() {
 
     app.get("/samples", async (req, res) => {
       const result = await dataCollections.find().toArray();
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
 
     //post methode
@@ -147,7 +150,10 @@ async function run() {
         .limit(6)
         .toArray();
       // console.log(result);
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
 
     //user can now see only their own gallery data
@@ -156,20 +162,29 @@ async function run() {
       const result = await dataCollections
         .find({ created_by: email })
         .toArray();
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
 
     app.post("/favorites", verifyFBtoken, async (req, res) => {
       const data = req.body;
       const result = await favoriteCollections.insertOne(data);
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
     app.get("/my-favorites", verifyFBtoken, async (req, res) => {
       const email = req.query.email;
       const result = await favoriteCollections
         .find({ addToFavorites: email })
         .toArray();
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
 
     app.patch("/samples/:id/like", verifyFBtoken, async (req, res) => {
@@ -187,30 +202,36 @@ async function run() {
     });
 
     //search api
-    app.get("/search", verifyFBtoken, async (req, res) => {
+    app.get("/search", async (req, res) => {
       const search_text = req.query.search;
       const result = await dataCollections
         .find({ title: { $regex: search_text, $options: "i" } })
         .toArray();
 
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
 
     //filter by category
-    app.get("/category", verifyFBtoken, async (req, res) => {
+    app.get("/category", async (req, res) => {
       const filter_cat = req.query.category;
 
       const result = await dataCollections
         .find({ category: filter_cat })
         .toArray();
 
-      res.send(result);
+      res.send({
+        success: true,
+        result,
+      });
     });
 
-    await client.db("admin").command({ ping: 1 });
-    // console.log(
-    //   "Pinged your deployment. You successfully connected to MongoDB!",
-    // );
+    // await client.db("admin").command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!",
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
@@ -222,6 +243,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// app.listen(port, () => {
-//   console.log(`Server is listening on port ${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+// module.exports = app;
