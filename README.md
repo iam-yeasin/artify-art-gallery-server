@@ -8,9 +8,9 @@ The **Artify Backend API** is a RESTful API built with **Node.js**, **Express**,
 
 ## 🔗 Base URL
 
+```text
 https://artify-gallery-server-side.vercel.app
-text
-Copy
+```
 
 ---
 
@@ -28,10 +28,9 @@ Copy
 ## 🔐 Authentication
 
 All protected endpoints require a **Firebase ID token** in the `Authorization` header:
-
+```sh
 Authorization: Bearer <Firebase_ID_Token>
-text
-Copy
+```
 
 ---
 
@@ -78,13 +77,12 @@ Copy
 
 ```http
 GET /samples
+```
 
 
+**Response:**
 
-Response:
-json
-Copy
-
+```json
 {
   "success": true,
   "result": [
@@ -98,16 +96,16 @@ Copy
     }
   ]
 }
+```
 
 
 
+### 2. **Add a New Artwork**
 
-2. Add a New Artwork
-Request:
-http
-Copy
-
+**Request:**
+```http
 POST /samples
+
 Authorization: Bearer <Firebase_ID_Token>
 Content-Type: application/json
 
@@ -116,37 +114,33 @@ Content-Type: application/json
   "category": "Digital",
   "created_by": "user@example.com"
 }
+```
 
 
+**Response:**
 
-Response:
-json
-Copy
-
+```json
 {
   "success": true,
   "result": {
     "insertedId": "ObjectId"
   }
 }
+```
 
 
 
+### 3. **Like an Artwork**
+**Request:**
 
-3. Like an Artwork
-Request:
-http
-Copy
-
+```http
 PATCH /samples/<artwork_id>/like
 Authorization: Bearer <Firebase_ID_Token>
+```
 
+**Response:**
 
-
-Response:
-json
-Copy
-
+```json
 {
   "success": true,
   "likesCount": {
@@ -154,93 +148,88 @@ Copy
     "modifiedCount": 1
   }
 }
+```
 
 
 
+### ⚠️ **Error Handling**
 
-⚠️ Error Handling
+- **401 Unauthorized: Missing or invalid Firebase token.*
+- **404 Not Found: Resource not found.*
+- **500 Internal Server Error: Server-side issues.*
 
-401 Unauthorized: Missing or invalid Firebase token.
-404 Not Found: Resource not found.
-500 Internal Server Error: Server-side issues.
+### 🛠️ **Technologies Used**
 
-🛠️ Technologies Used
+- **Node.js: Runtime environment.**
+- **Express: Web framework.**
+- **MongoDB: Database for storing artworks and favorites.**
+- **Firebase Admin SDK: Authentication and token verification.**
+- **CORS: Enable cross-origin requests.**
+- **dotenv: Environment variable management.**
 
-Node.js: Runtime environment.
-Express: Web framework.
-MongoDB: Database for storing artworks and favorites.
-Firebase Admin SDK: Authentication and token verification.
-CORS: Enable cross-origin requests.
-dotenv: Environment variable management.
-
-📂 Environment Variables
+### 📂 **Environment Variables**
 Create a .env file in the root directory:
+```env
 env
-Copy
 
 PORT=3000
 DB_USER=<MongoDB_Username>
 DB_PASS=<MongoDB_Password>
+```
 
 
 
-
-🚀 Setup & Installation
-Local Development
+### 🚀 **Setup & Installation**
+**Local Development**
 
 Clone the repository:
-bash
-Copy
+```bash
 
-git clone <repository_url>
+git clone https://github.com/iam-yeasin/artify-art-gallery-server.git
 
-
+```
 
 
 Install dependencies:
-bash
-Copy
+```bash
 
 npm install express cors mongodb firebase-admin dotenv
 
+```
 
 
+**Set up Firebase:**
 
-Set up Firebase:
+- Download the Firebase service account key (artifyKey.json).
+- Place it in the root directory.
 
-Download the Firebase service account key (artifyKey.json).
-Place it in the root directory.
-
-Run the server:
+**Run the server:**
 
 For development (with auto-restart on changes):
-bash
-Copy
+```bash
 
 npm install -g nodemon
 nodemon index.js
-
-
+```
 
 
 For production:
-bash
-Copy
-
+```bash
 node index.js
+```
 
 
 
 
+### 📐 **Deployment to Vercel**
 
+- Push your code to a Git repository (GitHub, GitLab, etc.).
+- Import the repository in Vercel Dashboard.
+- Add environment variables (DB_USER, DB_PASS, and Firebase credentials) in the Vercel project settings.
+- Deploy!
 
-Deployment to Vercel
-
-Push your code to a Git repository (GitHub, GitLab, etc.).
-Import the repository in Vercel Dashboard.
-Add environment variables (DB_USER, DB_PASS, and Firebase credentials) in the Vercel project settings.
-Deploy!
-
-📜 License
-This project is proprietary to [iam-yeasin](https://github.com/iam-yeasin).
+### 📜 **License**
+**This project is proprietary to :**
+```bash
+ https://github.com/iam-yeasin
 ```
