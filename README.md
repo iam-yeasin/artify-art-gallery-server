@@ -29,7 +29,7 @@ https://artify-gallery-server-side.vercel.app
 
 All protected endpoints require a **Firebase ID token** in the `Authorization` header:
 ```sh
-Authorization: Bearer <Firebase_ID_Token>
+Authorization: `Bearer ${user.accessToken}`
 ```
 
 ---
@@ -154,9 +154,9 @@ Authorization: Bearer <Firebase_ID_Token>
 
 ### ⚠️ **Error Handling**
 
-- **401 Unauthorized: Missing or invalid Firebase token.*
-- **404 Not Found: Resource not found.*
-- **500 Internal Server Error: Server-side issues.*
+- *401 Unauthorized: Missing or invalid Firebase token.*
+- *404 Not Found: Resource not found.*
+- *500 Internal Server Error: Server-side issues.*
 
 ### 🛠️ **Technologies Used**
 
