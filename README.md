@@ -28,8 +28,9 @@ https://artify-gallery-server-side.vercel.app
 ## 🔐 Authentication
 
 All protected endpoints require a **Firebase ID token** in the `Authorization` header:
-```sh
-Authorization: `Bearer ${user.accessToken}`
+
+```http
+Authorization: Bearer <Firebase_ID_Token>
 ```
 
 ---
@@ -79,7 +80,6 @@ Authorization: `Bearer ${user.accessToken}`
 GET /samples
 ```
 
-
 **Response:**
 
 ```json
@@ -98,11 +98,10 @@ GET /samples
 }
 ```
 
-
-
 ### 2. **Add a New Artwork**
 
 **Request:**
+
 ```http
 POST /samples
 
@@ -116,7 +115,6 @@ Content-Type: application/json
 }
 ```
 
-
 **Response:**
 
 ```json
@@ -128,9 +126,8 @@ Content-Type: application/json
 }
 ```
 
-
-
 ### 3. **Like an Artwork**
+
 **Request:**
 
 ```http
@@ -150,13 +147,11 @@ Authorization: Bearer <Firebase_ID_Token>
 }
 ```
 
-
-
 ### ⚠️ **Error Handling**
 
-- *401 Unauthorized: Missing or invalid Firebase token.*
-- *404 Not Found: Resource not found.*
-- *500 Internal Server Error: Server-side issues.*
+- _401 Unauthorized: Missing or invalid Firebase token._
+- _404 Not Found: Resource not found._
+- _500 Internal Server Error: Server-side issues._
 
 ### 🛠️ **Technologies Used**
 
@@ -168,35 +163,34 @@ Authorization: Bearer <Firebase_ID_Token>
 - **dotenv: Environment variable management.**
 
 ### 📂 **Environment Variables**
-Create a .env file in the root directory:
-```env
-env
 
+Create a .env file in the root directory:
+
+```env
 PORT=3000
 DB_USER=<MongoDB_Username>
 DB_PASS=<MongoDB_Password>
 ```
 
-
-
 ### 🚀 **Setup & Installation**
+
 **Local Development**
 
 Clone the repository:
+
 ```bash
 
 git clone https://github.com/iam-yeasin/artify-art-gallery-server.git
 
 ```
 
-
 Install dependencies:
+
 ```bash
 
 npm install express cors mongodb firebase-admin dotenv
 
 ```
-
 
 **Set up Firebase:**
 
@@ -206,20 +200,18 @@ npm install express cors mongodb firebase-admin dotenv
 **Run the server:**
 
 For development (with auto-restart on changes):
+
 ```bash
 
 npm install -g nodemon
 nodemon index.js
 ```
 
-
 For production:
+
 ```bash
 node index.js
 ```
-
-
-
 
 ### 📐 **Deployment to Vercel**
 
@@ -229,7 +221,9 @@ node index.js
 - Deploy!
 
 ### 📜 **License**
+
 **This project is proprietary to :**
+
 ```bash
  https://github.com/iam-yeasin
 ```
